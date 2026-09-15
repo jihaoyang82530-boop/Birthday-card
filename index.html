@@ -1,483 +1,140 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-    >
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>生日蛋糕3</title>
-
     <style>
-
-        /* =========================================
-           页面基础设置
-           ========================================= */
-
-        html,
-        body {
+        /* 设置body和html全屏，背景为黑色 */
+        html, body {
             margin: 0;
             padding: 0;
-
             height: 100%;
             width: 100%;
-
             overflow: hidden;
-
-            background-color: black;
-
-            /* 防止手机浏览器的一些默认触摸行为 */
-            touch-action: manipulation;
+            background-color: black; /* 背景保持黑色 */
         }
 
-
-        /* =========================================
-           开启礼物初始遮罩层
-           ========================================= */
-
+        /* 开启礼物初始遮罩层 */
         #start-screen {
             position: fixed;
-
             top: 0;
             left: 0;
-
             width: 100%;
             height: 100%;
-
-            background-color: black;
-
+            background-color: black; /* 纯黑色背景 */
             display: flex;
-
             justify-content: center;
             align-items: center;
-
-            z-index: 999;
+            z-index: 999; /* 保证遮罩层在最上面 */
         }
 
-
-        /* =========================================
-           浅粉色“开启礼物”按钮
-           ========================================= */
-
+        /* 浅粉色发光按钮 */
         #start-btn {
-
-            background-color: #ffb6c1;
-
+            background-color: #ffb6c1; /* 浅粉色 */
             color: #fff;
-
             font-size: 1.5rem;
-
             font-family: 'Microsoft YaHei', sans-serif;
-
             padding: 15px 40px;
-
             border: none;
-
             border-radius: 30px;
-
             cursor: pointer;
-
-            /* 发光效果 */
-            box-shadow:
-                0 0 15px rgba(255, 182, 193, 0.8),
-                0 0 30px rgba(255, 182, 193, 0.5);
-
+            /* 轻微发光效果 */
+            box-shadow: 0 0 15px rgba(255, 182, 193, 0.8), 0 0 30px rgba(255, 182, 193, 0.5);
             transition: all 0.3s ease;
-
-            /* 防止按钮文字被选中 */
-            user-select: none;
-
-            -webkit-user-select: none;
-
-            /* 防止手机点击按钮出现高亮 */
-            -webkit-tap-highlight-color: transparent;
         }
 
-
-        /* =========================================
-           鼠标悬停时增强发光
-           ========================================= */
-
+        /* 鼠标悬停时发光增强 */
         #start-btn:hover {
-
-            box-shadow:
-                0 0 20px rgba(255, 182, 193, 1),
-                0 0 40px rgba(255, 182, 193, 0.8);
-
+            box-shadow: 0 0 20px rgba(255, 182, 193, 1), 0 0 40px rgba(255, 182, 193, 0.8);
             transform: scale(1.05);
         }
 
-
-        /* =========================================
-           生日蛋糕视频
-           ========================================= */
-
+        /* 背景视频：完整显示视频，放大到70%并居中 */
         .video-background {
-
             position: absolute;
-
             top: 50%;
             left: 50%;
-
             width: 100%;
             height: 100%;
-
-            /*
-             * 保持原来的70%大小
-             */
-            transform:
-                translate(-50%, -50%)
-                scale(0.7);
-
-            /*
-             * 完整显示视频，不裁剪
-             */
-            object-fit: contain;
-
-            z-index: 1;
-
-            /*
-             * 关键：
-             * 让手机浏览器以内嵌方式播放，
-             * 不要自动跳到全屏视频播放器。
-             */
-            display: block;
-
-            /*
-             * 提前加载视频
-             */
-            background-color: black;
-
-            /*
-             * 防止视频本身拦截“开启礼物”按钮之外的触摸
-             */
-            pointer-events: none;
+            transform: translate(-50%, -50%) scale(0.7); 
+            object-fit: contain; 
+            z-index: 1; 
         }
 
-
-        /* =========================================
-           页面内容
-           ========================================= */
-
-        .content {
-
+        /* ================= 祝福语文字 ================= */
+        #wish-text {
             position: absolute;
+            top: 8%; /* 修改了这里：从18%提到了8%，位置更靠上 */
+            left: 50%;
+            transform: translateX(-50%); /* 水平居中 */
+            color: #ffffff; /* 白色 */
+            font-size: 1.8rem; /* 字号大小 */
+            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.9), 
+                         0 0 20px rgba(255, 255, 255, 0.6), 
+                         0 0 30px rgba(255, 255, 255, 0.4); /* 微微发光的光晕感 */
+            letter-spacing: 2px; /* 字间距 */
+            white-space: nowrap; /* 不换行 */
+            z-index: 2; /* 文字在视频之上 */
+            display: none; /* 初始隐藏 */
+        }
+        /* ============================================== */
 
+        /* 页面内容 */
+        .content {
+            position: absolute;
             top: 50%;
             left: 50%;
-
-            transform:
-                translate(-50%, -50%);
-
-            color: rgb(240, 17, 155);
-
-            font-size: 0.5rem;
-
-            font-family: 华文彩云;
-
-            animation: pulse 1.5s infinite;
-
+            transform: translate(-50%, -50%);
             text-align: center;
-
-            z-index: 2;
+            z-index: 2; 
         }
-
     </style>
 </head>
-
-
 <body>
 
-
-    <!-- =========================================
-         开启礼物界面
-         ========================================= -->
-
+    <!-- 初始按钮界面 -->
     <div id="start-screen">
-
-        <button id="start-btn">
-            开启礼物
-        </button>
-
+        <button id="start-btn">开启礼物</button>
     </div>
 
-
-    <!-- =========================================
-         生日蛋糕视频
-         =========================================
-
-         这里是这次修改的重点：
-
-         autoplay
-         = 尝试自动播放
-
-         muted
-         = 静音播放，手机浏览器通常允许自动播放
-
-         loop
-         = 循环播放
-
-         playsinline
-         = 手机内嵌播放，不强制全屏
-
-         webkit-playsinline
-         = 兼容 iPhone / iOS Safari
-
-         preload="auto"
-         = 尽可能提前加载视频
-         ========================================= -->
-
-    <video
-        id="birthdayVideo"
-        class="video-background"
-        autoplay
-        muted
-        loop
-        playsinline
-        webkit-playsinline="true"
-        preload="auto"
-    >
-
-        <source
-            src="生日蛋糕3.mp4"
-            type="video/mp4"
-        >
-
-        你的浏览器不支持视频播放。
-
+    <!-- 背景视频 -->
+    <video id="cake-video" class="video-background" autoplay muted loop playsinline webkit-playsinline preload="auto">
+        <source src="生日蛋糕3.mp4" type="video/mp4">
+        Your browser does not support the video tag.
     </video>
-
-
-    <!-- =========================================
-         背景音乐
-         ========================================= -->
-
-    <audio
-        id="music1"
-        loop
-        preload="auto"
-        controls
-        hidden
-    >
-
-        <!--
-            canon.mp3 必须和 HTML 文件
-            放在同一个文件夹里面
-        -->
-
-        <source
-            src="canon.mp3"
-            type="audio/mpeg"
-        >
-
-        你的浏览器不支持音频播放。
-
+    
+    <!-- 音频 -->
+    <audio id="music1" loop preload="auto" controls hidden>
+         <source src="canon.mp3" type="audio/mpeg">
+         Your browser does not support the audio element.
     </audio>
-
-
-    <!-- =========================================
-         JavaScript
-         ========================================= -->
+     
+    <!-- 祝福语文字 -->
+    <div id="wish-text">万事顺遂，皆得所愿</div>
 
     <script>
+         document.getElementById('start-btn').addEventListener('click', function() {
+            // 1. 隐藏初始遮罩
+            document.getElementById('start-screen').style.display = 'none';
+            
+            // 2. 显示文字
+            document.getElementById('wish-text').style.display = 'block';
 
-        /* =========================================
-           获取元素
-           ========================================= */
-
-        var startScreen =
-            document.getElementById('start-screen');
-
-        var startBtn =
-            document.getElementById('start-btn');
-
-        var myAudio =
-            document.getElementById('music1');
-
-        var myVideo =
-            document.getElementById('birthdayVideo');
-
-
-        /* =========================================
-           页面加载后
-           ========================================= */
-
-        window.addEventListener('load', function () {
-
-            /*
-             * 确保视频处于静音状态。
-             *
-             * 静音的视频更容易获得手机浏览器
-             * 的自动播放许可。
-             */
-
-            myVideo.muted = true;
-
-            /*
-             * 尝试提前播放。
-             *
-             * 如果手机浏览器禁止自动播放，
-             * 这里失败也没关系。
-             *
-             * 等用户点击“开启礼物”以后，
-             * 我们还会再次主动播放。
-             */
-
-            var autoPlay =
-                myVideo.play();
-
-            if (autoPlay !== undefined) {
-
-                autoPlay.catch(function (error) {
-
-                    console.log(
-                        "手机浏览器暂时阻止自动播放：",
-                        error
-                    );
-
-                });
-
-            }
-
-        });
-
-
-        /* =========================================
-           点击“开启礼物”
-           ========================================= */
-
-        startBtn.addEventListener(
-            'click',
-            function () {
-
-                /*
-                 * ---------------------------------
-                 * 第一步：
-                 * 隐藏黑色开始界面
-                 * ---------------------------------
-                 */
-
-                startScreen.style.display = 'none';
-
-
-                /*
-                 * ---------------------------------
-                 * 第二步：
-                 * 播放生日蛋糕视频
-                 *
-                 * 这是这次最重要的修改。
-                 *
-                 * 因为这一段代码是在用户主动
-                 * 点击“开启礼物”之后执行的，
-                 * 手机浏览器通常会允许视频开始播放。
-                 * ---------------------------------
-                 */
-
-                myVideo.muted = true;
-
-                var videoPlay =
-                    myVideo.play();
-
-                if (videoPlay !== undefined) {
-
-                    videoPlay.then(function () {
-
-                        console.log(
-                            "🎂 生日蛋糕动画开始播放"
-                        );
-
-                    }).catch(function (error) {
-
-                        console.log(
-                            "❌ 蛋糕视频播放失败：",
-                            error
-                        );
-
-                    });
-
-                }
-
-
-                /*
-                 * ---------------------------------
-                 * 第三步：
-                 * 播放背景音乐
-                 * ---------------------------------
-                 */
-
-                var audioPlay =
-                    myAudio.play();
-
-                if (audioPlay !== undefined) {
-
-                    audioPlay.then(function () {
-
-                        console.log(
-                            "🎵 背景音乐开始播放"
-                        );
-
-                    }).catch(function (error) {
-
-                        console.log(
-                            "❌ 音乐播放失败：",
-                            error
-                        );
-
-                    });
-
-                }
-
-            }
-        );
-
-
-        /* =========================================
-           手机触摸事件备用方案
-           ========================================= */
-
-        startBtn.addEventListener(
-            'touchend',
-            function () {
-
-                /*
-                 * 确保手机触摸“开启礼物”时，
-                 * 视频也能够启动。
-                 */
-
-                myVideo.muted = true;
-
-                myVideo.play().catch(
-                    function (error) {
-
-                        console.log(
-                            "触摸启动视频失败：",
-                            error
-                        );
-
-                    }
-                );
-
-            },
-            {
-                passive: true
-            }
-        );
-
-
+            // 3. 播放音乐
+            var myAudio = document.getElementById('music1');
+            myAudio.play().catch(function(error) { console.log("音乐播放失败", error); });
+            
+            // 4. 播放视频
+            var myVideo = document.getElementById('cake-video');
+            myVideo.play().catch(function(error) { console.log("视频播放失败", error); });
+         });
     </script>
-
-
-    <!-- =========================================
-         页面内容
-         ========================================= -->
-
+    
+    <!-- 页面内容 -->
     <div class="content">
-
     </div>
 
-
 </body>
-</html
+</html>
