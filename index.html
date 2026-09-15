@@ -62,31 +62,16 @@
             z-index: 1; 
         }
 
-        /* ================= 新增：居中的祝福语文字 ================= */
-        #wish-text {
-            position: absolute;
-            top: 8%; /* 文字在屏幕上方位置，如果觉得太高可改为10%或12% */
-            left: 50%;
-            transform: translateX(-50%); /* 水平居中 */
-            color: #ffffff; /* 白色 */
-            font-size: 1.8rem; /* 字号大小 */
-            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.9), 
-                         0 0 20px rgba(255, 255, 255, 0.6), 
-                         0 0 30px rgba(255, 255, 255, 0.4); /* 微微发光的光晕感 */
-            letter-spacing: 2px; /* 字间距 */
-            white-space: nowrap; /* 保证文字在一行 */
-            z-index: 2; /* 保证文字在视频上方 */
-            display: none; /* 初始隐藏，点击按钮后才显示 */
-        }
-        /* ======================================================== */
-
-        /* 页面内容（原有的，保留） */
+        /* 页面内容 */
         .content {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
+            color: rgb(240, 17, 155);
+            font-size: 0.5rem;
+            font-family: 华文彩云;
+            animation: pulse 1.5s infinite;
             text-align: center;
             z-index: 2; 
         }
@@ -99,31 +84,26 @@
         <button id="start-btn">开启礼物</button>
     </div>
 
-    <!-- 背景视频（完全保持你原来的代码，一个字没动） -->
+    <!-- 背景视频（保持不变） -->
     <video class="video-background" autoplay muted loop>
         <source src="生日蛋糕3.mp4" type="video/mp4">
         Your browser does not support the video tag.
     </video>
     
-    <!-- 音频（完全保持你原来的代码，一个字没动） -->
+    <!-- 音频：已换成本地《卡农》文件 -->
     <audio id="music1" loop preload="auto" controls hidden>
+         <!-- 确保名为 canon.mp3 的音乐文件和本 HTML 文件在同一个文件夹里 -->
          <source src="canon.mp3" type="audio/mpeg">
          Your browser does not support the audio element.
     </audio>
      
-    <!-- 新增：祝福语文字 -->
-    <div id="wish-text">万事顺遂，皆得所愿</div>
-
     <script>
          // 将点击事件绑定到【开启礼物】按钮上
          document.getElementById('start-btn').addEventListener('click', function() {
             // 1. 隐藏初始的黑色遮罩层和按钮
             document.getElementById('start-screen').style.display = 'none';
             
-            // 2. 显示祝福语文字（只加这一句，不干预视频）
-            document.getElementById('wish-text').style.display = 'block';
-
-            // 3. 开始播放音乐（你原来的代码）
+            // 2. 开始播放音乐
             var myAudio = document.getElementById('music1');
             myAudio.play();
          });
