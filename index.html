@@ -62,10 +62,10 @@
             z-index: 1; 
         }
 
-        /* ================= 祝福语文字 ================= */
+        /* ================= 新增：居中的祝福语文字 ================= */
         #wish-text {
             position: absolute;
-            top: 8%; /* 修改了这里：从18%提到了8%，位置更靠上 */
+            top: 8%; /* 文字在屏幕上方位置，如果觉得太高可改为10%或12% */
             left: 50%;
             transform: translateX(-50%); /* 水平居中 */
             color: #ffffff; /* 白色 */
@@ -75,13 +75,13 @@
                          0 0 20px rgba(255, 255, 255, 0.6), 
                          0 0 30px rgba(255, 255, 255, 0.4); /* 微微发光的光晕感 */
             letter-spacing: 2px; /* 字间距 */
-            white-space: nowrap; /* 不换行 */
-            z-index: 2; /* 文字在视频之上 */
-            display: none; /* 初始隐藏 */
+            white-space: nowrap; /* 保证文字在一行 */
+            z-index: 2; /* 保证文字在视频上方 */
+            display: none; /* 初始隐藏，点击按钮后才显示 */
         }
-        /* ============================================== */
+        /* ======================================================== */
 
-        /* 页面内容 */
+        /* 页面内容（原有的，保留） */
         .content {
             position: absolute;
             top: 50%;
@@ -99,36 +99,33 @@
         <button id="start-btn">开启礼物</button>
     </div>
 
-    <!-- 背景视频 -->
-    <video id="cake-video" class="video-background" autoplay muted loop playsinline webkit-playsinline preload="auto">
+    <!-- 背景视频（完全保持你原来的代码，一个字没动） -->
+    <video class="video-background" autoplay muted loop>
         <source src="生日蛋糕3.mp4" type="video/mp4">
         Your browser does not support the video tag.
     </video>
     
-    <!-- 音频 -->
+    <!-- 音频（完全保持你原来的代码，一个字没动） -->
     <audio id="music1" loop preload="auto" controls hidden>
          <source src="canon.mp3" type="audio/mpeg">
          Your browser does not support the audio element.
     </audio>
      
-    <!-- 祝福语文字 -->
+    <!-- 新增：祝福语文字 -->
     <div id="wish-text">万事顺遂，皆得所愿</div>
 
     <script>
+         // 将点击事件绑定到【开启礼物】按钮上
          document.getElementById('start-btn').addEventListener('click', function() {
-            // 1. 隐藏初始遮罩
+            // 1. 隐藏初始的黑色遮罩层和按钮
             document.getElementById('start-screen').style.display = 'none';
             
-            // 2. 显示文字
+            // 2. 显示祝福语文字（只加这一句，不干预视频）
             document.getElementById('wish-text').style.display = 'block';
 
-            // 3. 播放音乐
+            // 3. 开始播放音乐（你原来的代码）
             var myAudio = document.getElementById('music1');
-            myAudio.play().catch(function(error) { console.log("音乐播放失败", error); });
-            
-            // 4. 播放视频
-            var myVideo = document.getElementById('cake-video');
-            myVideo.play().catch(function(error) { console.log("视频播放失败", error); });
+            myAudio.play();
          });
     </script>
     
