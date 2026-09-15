@@ -5,33 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>生日蛋糕3</title>
     <style>
-        /* 设置body和html全屏，背景为黑色 */
         html, body {
             margin: 0;
             padding: 0;
             height: 100%;
             width: 100%;
             overflow: hidden;
-            background-color: black; /* 背景保持黑色 */
+            background-color: black;
         }
 
-        /* 开启礼物初始遮罩层 */
         #start-screen {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: black; /* 纯黑色背景 */
+            background-color: black;
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 999; /* 保证遮罩层在最上面 */
+            z-index: 999;
         }
 
-        /* 浅粉色发光按钮 */
         #start-btn {
-            background-color: #ffb6c1; /* 浅粉色 */
+            background-color: #ffb6c1;
             color: #fff;
             font-size: 1.5rem;
             font-family: 'Microsoft YaHei', sans-serif;
@@ -39,18 +36,15 @@
             border: none;
             border-radius: 30px;
             cursor: pointer;
-            /* 轻微发光效果 */
             box-shadow: 0 0 15px rgba(255, 182, 193, 0.8), 0 0 30px rgba(255, 182, 193, 0.5);
             transition: all 0.3s ease;
         }
 
-        /* 鼠标悬停时发光增强 */
         #start-btn:hover {
             box-shadow: 0 0 20px rgba(255, 182, 193, 1), 0 0 40px rgba(255, 182, 193, 0.8);
             transform: scale(1.05);
         }
 
-        /* 背景视频：完整显示视频，放大到70%并居中 */
         .video-background {
             position: absolute;
             top: 50%;
@@ -62,7 +56,6 @@
             z-index: 1; 
         }
 
-        /* 页面内容 */
         .content {
             position: absolute;
             top: 50%;
@@ -79,43 +72,52 @@
 </head>
 <body>
 
-    <!-- 初始按钮界面 -->
     <div id="start-screen">
         <button id="start-btn">开启礼物</button>
     </div>
 
-    <!-- 
-      修改点1：给 video 加了 id="cake-video"
-      修改点2：加了 playsinline webkit-playsinline（防止手机全屏且允许内联播放）
-    -->
-    <video id="cake-video" class="video-background" autoplay muted loop playsinline webkit-playsinline>
+    <!-- 增加了 preload="auto" 让手机提前缓冲视频 -->
+    <video id="cake-video" class="video-background" autoplay muted loop playsinline webkit-playsinline preload="auto">
         <source src="生日蛋糕3.mp4" type="video/mp4">
         Your browser does not support the video tag.
     </video>
     
-    <!-- 音频 -->
     <audio id="music1" loop preload="auto" controls hidden>
          <source src="canon.mp3" type="audio/mpeg">
          Your browser does not support the audio element.
     </audio>
      
     <script>
-         // 修改点3：点击按钮时，同时播放视频和音频
          document.getElementById('start-btn').addEventListener('click', function() {
-            // 1. 隐藏初始的黑色遮罩层和按钮
+            // 1. 隐藏遮罩层
             document.getElementById('start-screen').style.display = 'none';
             
-            // 2. 开始播放音乐
+            // 2. 播放音乐
             var myAudio = document.getElementById('music1');
-            myAudio.play();
+            myAudio.play().catch(function(error) { console.log("音乐播放失败", error); });
             
-            // 3. 强制让视频开始播放（解决手机端不旋转的问题）
+            // 3. 强力播放视频（处理手机端各种拒绝播放的异常）
             var myVideo = document.getElementById('cake-video');
-            myVideo.play();
+            
+            // 手机端 sometimes 需要重置一下播放进度
+            myVideo.currentTime = 0; 
+            
+            var playPromise = myVideo.play();
+            
+            if (playPromise !== undefined) {
+                playPromise.then(_ => {
+                    // 播放成功
+                    console.log("视频开始播放");
+                }).catch(error => {
+                    // 如果播放被拒绝，尝试重新加载并再次播放
+                    console.log("尝试重新播放视频", error);
+                    myVideo.load();
+                    myVideo.play();
+                });
+            }
          });
     </script>
     
-    <!-- 页面内容 -->
     <div class="content">
     </div>
 
