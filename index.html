@@ -84,21 +84,23 @@
         <button id="start-btn">开启礼物</button>
     </div>
 
-    <!-- 背景视频（保持不变） -->
-    <video class="video-background" autoplay muted loop>
+    <!-- 
+      修改点1：给 video 加了 id="cake-video"
+      修改点2：加了 playsinline webkit-playsinline（防止手机全屏且允许内联播放）
+    -->
+    <video id="cake-video" class="video-background" autoplay muted loop playsinline webkit-playsinline>
         <source src="生日蛋糕3.mp4" type="video/mp4">
         Your browser does not support the video tag.
     </video>
     
-    <!-- 音频：已换成本地《卡农》文件 -->
+    <!-- 音频 -->
     <audio id="music1" loop preload="auto" controls hidden>
-         <!-- 确保名为 canon.mp3 的音乐文件和本 HTML 文件在同一个文件夹里 -->
          <source src="canon.mp3" type="audio/mpeg">
          Your browser does not support the audio element.
     </audio>
      
     <script>
-         // 将点击事件绑定到【开启礼物】按钮上
+         // 修改点3：点击按钮时，同时播放视频和音频
          document.getElementById('start-btn').addEventListener('click', function() {
             // 1. 隐藏初始的黑色遮罩层和按钮
             document.getElementById('start-screen').style.display = 'none';
@@ -106,6 +108,10 @@
             // 2. 开始播放音乐
             var myAudio = document.getElementById('music1');
             myAudio.play();
+            
+            // 3. 强制让视频开始播放（解决手机端不旋转的问题）
+            var myVideo = document.getElementById('cake-video');
+            myVideo.play();
          });
     </script>
     
